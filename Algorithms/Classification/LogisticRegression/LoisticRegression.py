@@ -24,6 +24,9 @@ def data_processing(X, y):
     # 这里对标签不进行处理
     # 将X = (X1, X2)进行处理
     X = mapFeature(X[:, 0], X[:, 1])
+    # X_out = (1, x1, x2, x1^2, x1*x2, x2^2)
+    # 此时X_out的形状为 (118, 6)
+    return X
 
 
 def mapFeature(X1, X2):
@@ -33,7 +36,18 @@ def mapFeature(X1, X2):
     X_out = np.ones(shape = (X1.shape[0], 1))
     '''
     映射为 1,x1,x2,x1^2,x1,x2,x2^2 多项式组合
+    X_out = (1, x1, x2, x1^2, x1*x2, x2^2) 
+            = (1, x1^i * x2^j) for i + j == degree+1
+    循环i,j 然后按列拼接即可
     '''
+    for i in range(1, degree + 1):
+        for j in range(i +1):
+            # 计算 x1^i * x2^j
+            temp = (X1 ** (i - j)) * (X2 ** j)
+            # 拼接到 X_out
+            X_out = np.hstack((X_out, temp.reshape(-1, 1)))
+    return X_out
+
 
 
 # 这是主函数入口
@@ -41,7 +55,8 @@ def LogisticRegression():
     # 加载数据
     X, y = load_data()
     # 开始处理数据
-    # 这里的数据处理是，将X = (X1, X2)这个二维数据变成多项式(X1^2, X1X2, X2^2)
+    # 这里的数据处理是，将X = (X1, X2)这个二维数据变成多项式(1, X1, X2, X1^2, X1X2, X2^2)
+    X = data_processing(X, y) # (118, 6)
 
 
 
