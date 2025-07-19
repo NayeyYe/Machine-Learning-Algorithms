@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import optimize
 from matplotlib.font_manager import FontProperties
+from torch.distributions.constraints import positive
+
 font = FontProperties(fname = r'c:\windows\fonts\simsun.ttc', size = 14)
 
 
@@ -56,6 +58,29 @@ def sigmoid(z):
     return h
 
 
+def gradient(theta, X, y, _lambda):
+    m = X.shape[0]  # 样本数量
+    grad = np.zeros((theta.shape[0], 1))  # 初始化梯度为零向量
+
+    h = sigmoid(np.dot(X, theta))  # 计算h(z)
+    '''
+    注意:
+    在逻辑回归中，我们的目标是获取一个线性的组合
+        result = beta_0 + beta_1 * x1 + beta_2 * x2 + ... + beta_n * xn
+    写成矩阵形式为 result = (1, x1, x2, ..., xn) * (beta_0, beta_1, beta_2, ..., beta_n)^T
+    我们这个的theta就是 (beta_0, beta_1, beta_2, ..., beta_n)^T,
+    但是在正则化过程中, 第一个是beta_0, 也就是theta[0]不参与正则化
+    所以我们要复制一份theta, 然后将第一个元素置为0
+    '''
+    theta1 = theta.copy()  # 复制一份theta
+    theta1[0] = 0  # 将第一个元素置为0, 因为正则化不包含theta[0]
+
+    # 计算梯度
+    grad = np.dot(np.transpose(X), h - y) / m + _lambda / m * theta1  # 正则化的梯度
+    return grad  # 返回梯度向量
+
+
+
 # 在给定的theta和X下，计算loss
 # 这是我们需要优化的函数
 def lossFunction(theta, X, y, _lambda):
@@ -81,6 +106,42 @@ def lossFunction(theta, X, y, _lambda):
     # 计算代价函数
     loss = (-np.dot(np.transpose(y), np.log(h)) - np.dot(np.transpose(1 - y), np.log(1 - h)) + temp * _lambda / 2) / m
     return loss
+
+
+
+
+def plot_decision_boundary(theta, X, y):
+    positive_data = np.where(y == 1)  # 找到y == 1的坐标
+    negative_data = np.where(y == 0)  # 找到y == 0的坐标
+
+    # 作图
+    plt.figure(figsize = (10, 10))
+    plt.plot(X[positive_data, 0], X[positive_data, 1], 'ro', label = 'Positive example')
+    plt.plot(X[negative_data, 0], X[negative_data, 1], 'bo', label = 'Negative example')
+    plt.title(u'散点图', fontproperties = font)
+
+    u = np.linspace(-1,1.5,50)  #根据具体的数据，这里需要调整
+    v = np.linspace(-1,1.5,50)
+
+    z = np.zeros((len(u),len(v)))
+    for i in range(len(u)):
+        for j in range(len(v)):
+            z[i,j] = np.dot(mapFeature(u[i].reshape(1,-1),v[j].reshape(1,-1)),theta)    # 计算对应的值，需要map
+
+    z = np.transpose(z)
+    plt.contour(u,v,z,[0,0.01],linewidth=2.0)   # 画等高线，范围在[0,0.01]，即近似为决策边界
+    #plt.legend()
+    plt.show()
+
+
+
+def predict(X, theta):
+    # 预测函数
+    # 计算预测值
+    h = sigmoid(np.dot(X, theta))  # 计算h(z)
+    # 将预测值转换为0或1
+    p = (h >= 0.5).astype(int)  # 如果h >= 0.5，则预测为1，否则为0
+    return p  # 返回预测结果
 
 
 # 这是主函数入口
@@ -111,6 +172,22 @@ def LogisticRegression():
     loss = lossFunction(theta, X, y, _lambda)
     print(f'Initial loss: {loss}')  # 打印初始代价
 
+    # 利用optimize库来优化loss函数
+    result = optimize.fmin_bfgs(lossFunction, theta, fprime=gradient, args=(X, y, _lambda))
+    '''
+    调用optimize.fmin_bfgs来优化loss函数
+    fmin_bfgs是BFGS算法的实现，用于求解无约束优化问题
+    lossFunction是我们要优化的函数
+    fprime是梯度函数，这里我们用gradient函数来计算梯度
+    args是传递给lossFunction的额外参数，这里我们传递X, y和_lambda
+    '''
+    p = predict(X, result)  # 预测
+    print(f'在训练集上的准确度为 {np.mean(np.float64(p == y) * 100):.2f}%')  # 与真实值比较，p==y返回True，转化为float
+
+    X = X[:, 1:]  # 去掉第一列的1
+    y = y.reshape(-1, 1)  # 将y转换为列向量
+    plot_decision_boundary(result, X, y)  # 画决策边界
+
 
 # 这个函数是用来查看数据分布的样子的
 def plot_data():
@@ -128,5 +205,3 @@ def plot_data():
 
 if __name__ == '__main__':
     LogisticRegression()  # 调用逻辑回归函数
-    plot_data()  # 绘制数据分布图
-    print("Logistic Regression completed.")
