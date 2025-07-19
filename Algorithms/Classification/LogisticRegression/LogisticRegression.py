@@ -11,10 +11,10 @@ def load_data():
     # 加载一下数据
     filename = 'data.txt'
     data = np.loadtxt(filename, delimiter = ',', dtype = np.float64)
-    # print(data.shape) # (118, 3)
+    # print(data.shape) # (500, 3)
     # 前两列为坐标，最后一列为标签
-    X = data[ : , 0:-1] # (118, 2)
-    y = data[ : , -1] # (118, 1)
+    X = data[ : , 0:-1] # (500, 2)
+    y = data[ : , -1] # (500, 1)
 
     return X, y
 
@@ -25,7 +25,7 @@ def data_processing(X, y):
     # 将X = (X1, X2)进行处理
     X = mapFeature(X[:, 0], X[:, 1])
     # X_out = (1, x1, x2, x1^2, x1*x2, x2^2)
-    # 此时X_out的形状为 (118, 6)
+    # 此时X_out的形状为 (500, 6)
     return X
 
 
@@ -54,9 +54,13 @@ def mapFeature(X1, X2):
 def LogisticRegression():
     # 加载数据
     X, y = load_data()
+
     # 开始处理数据
     # 这里的数据处理是，将X = (X1, X2)这个二维数据变成多项式(1, X1, X2, X1^2, X1X2, X2^2)
-    X = data_processing(X, y) # (118, 6)
+    X = data_processing(X, y) # (500, 6)
+
+    # 逻辑回归中的各种参数初始化
+    
 
 
 
