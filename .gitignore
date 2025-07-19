@@ -2,4 +2,4 @@
 .gitignore
 
 # Ignore data.txt
-Algorithms/Classification/LogisticRegression/data.txt
+.Algorithms/Classification/LogisticRegression/data.txt
