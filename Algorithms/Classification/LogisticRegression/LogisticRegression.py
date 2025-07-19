@@ -1,9 +1,9 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy import optimize
+import numpy as np
 from matplotlib.font_manager import FontProperties
+from scipy import optimize
 
-font = FontProperties(fname = r'c:\windows\fonts\simsun.ttc', size = 14)
+font = FontProperties(fname=r'c:\windows\fonts\simsun.ttc', size=14)
 
 
 # 加载数据函数
@@ -11,11 +11,11 @@ def load_data():
     # 用np.loadtxt加载txt文件，如果是其他文件，再说吧
     # 加载一下数据
     filename = 'data.txt'
-    data = np.loadtxt(filename, delimiter = ',', dtype = np.float64)
+    data = np.loadtxt(filename, delimiter=',', dtype=np.float64)
     # print(data.shape) # (500, 3)
     # 前两列为坐标，最后一列为标签
-    X = data[ : , 0:-1] # (500, 2)
-    y = data[ : , -1] # (500, 1)
+    X = data[:, 0:-1]  # (500, 2)
+    y = data[:, -1]  # (500, 1)
 
     return X, y
 
@@ -34,7 +34,7 @@ def mapFeature(X1, X2):
     # 映射的最高次方
     degree = 2
     # 映射结果，用于取代 X
-    X_out = np.ones(shape = (X1.shape[0], 1))
+    X_out = np.ones(shape=(X1.shape[0], 1))
     '''
     映射为 1,x1,x2,x1^2,x1,x2,x2^2 多项式组合
     X_out = (1, x1, x2, x1^2, x1*x2, x2^2) 
@@ -42,7 +42,7 @@ def mapFeature(X1, X2):
     循环i,j 然后按列拼接即可
     '''
     for i in range(1, degree + 1):
-        for j in range(i +1):
+        for j in range(i + 1):
             # 计算 x1^i * x2^j
             temp = (X1 ** (i - j)) * (X2 ** j)
             # 拼接到 X_out
@@ -79,13 +79,12 @@ def gradient(theta, X, y, _lambda):
     return grad  # 返回梯度向量
 
 
-
 # 在给定的theta和X下，计算loss
 # 这是我们需要优化的函数
 def lossFunction(theta, X, y, _lambda):
     # 初始参数
     m = X.shape[0]  # 样本数量
-    loss = 0 # loss初始化为0
+    loss = 0  # loss初始化为0
 
     h = sigmoid(np.dot(X, theta))  # 计算h(z)
     '''
@@ -105,8 +104,6 @@ def lossFunction(theta, X, y, _lambda):
     # 计算代价函数
     loss = (-np.dot(np.transpose(y), np.log(h)) - np.dot(np.transpose(1 - y), np.log(1 - h)) + temp * _lambda / 2) / m
     return loss
-
-
 
 
 def plot_decision_boundary(theta, X, y):
@@ -150,7 +147,7 @@ def LogisticRegression():
 
     # 开始处理数据
     # 这里的数据处理是，将X = (X1, X2)这个二维数据变成多项式(1, X1, X2, X1^2, X1X2, X2^2)
-    X = data_processing(X, y) # (500, 6)
+    X = data_processing(X, y)  # (500, 6)
 
     # 逻辑回归中的各种参数初始化
     # 第一个是参数向量theta，第二个是正则化参数lambda
@@ -196,11 +193,12 @@ def plot_data():
     negative_data = np.where(y == 0)
 
     # 作图
-    plt.figure(figsize = (10,10))
-    plt.plot(X[positive_data, 0], X[positive_data, 1], 'ro', label = 'Positive example')
-    plt.plot(X[negative_data, 0], X[negative_data, 1], 'bo', label = 'Negative example')
-    plt.title(u'散点图', fontproperties = font)
+    plt.figure(figsize=(10, 10))
+    plt.plot(X[positive_data, 0], X[positive_data, 1], 'ro', label='Positive example')
+    plt.plot(X[negative_data, 0], X[negative_data, 1], 'bo', label='Negative example')
+    plt.title(u'散点图', fontproperties=font)
     plt.show()
+
 
 if __name__ == '__main__':
     LogisticRegression()  # 调用逻辑回归函数
