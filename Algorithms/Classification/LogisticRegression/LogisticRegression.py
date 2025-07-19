@@ -49,6 +49,39 @@ def mapFeature(X1, X2):
     return X_out
 
 
+def sigmoid(z):
+    # Sigmoid函数
+    h = np.zeros((len(z), 1))  # 初始化h为零向量
+    h = 1 / (1 + np.exp(-z))  # Sigmoid函数公式
+    return h
+
+
+# 在给定的theta和X下，计算loss
+# 这是我们需要优化的函数
+def lossFunction(theta, X, y, _lambda):
+    # 初始参数
+    m = X.shape[0]  # 样本数量
+    loss = 0 # loss初始化为0
+
+    h = sigmoid(np.dot(X, theta))  # 计算h(z)
+    '''
+    注意:
+    在logistic回归中，我们的目标是获取一个线性的组合
+        result = beta_0 + beta_1 * x1 + beta_2 * x2 + ... + beta_n * xn
+    写成矩阵形式为 result = (1, x1, x2, ..., xn) * (beta_0, beta_1, beta_2, ..., beta_n)^T
+    我们这个的theta就是 (beta_0, beta_1, beta_2, ..., beta_n)^T,
+    但是在正则化过程中, 第一个是beta_0, 也就是theta[0]不参与正则化
+    所以我们要复制一份theta, 然后将第一个元素置为0
+    '''
+
+    theta1 = theta.copy()  # 复制一份theta
+    theta1[0] = 0  # 将第一个元素置为0, 因为正则化不包含theta[0]
+
+    temp = np.dot(np.transpose(theta1), theta1)  # 计算theta的平方和
+    # 计算代价函数
+    loss = (-np.dot(np.transpose(y), np.log(h)) - np.dot(np.transpose(1 - y), np.log(1 - h)) + temp * _lambda / 2) / m
+    return loss
+
 
 # 这是主函数入口
 def LogisticRegression():
@@ -60,8 +93,23 @@ def LogisticRegression():
     X = data_processing(X, y) # (500, 6)
 
     # 逻辑回归中的各种参数初始化
-    
+    # 第一个是参数向量theta，第二个是正则化参数lambda
+    '''
+    在逻辑回归中，theta是参数向量，通常初始化为零向量
+    这里的X.shape[1]是特征的数量，theta的形状为 (n, 1)，其中n是特征的数量
+    这里的X.shape[1] = 6，所以theta的形状为 (6, 1)
+    '''
+    theta = np.zeros((X.shape[1], 1))
+    # 正则化参数
+    _lambda = 0.1
+    '''
+    在逻辑回归中，正则化参数lambda用于控制模型的复杂度
+    这里设置为1.0是一个常见的初始值，可以根据需要进行调整
+    '''
 
+    # 代价函数, 也就是loss, 我们用负对数极大似然估计函数用于计算代价
+    loss = lossFunction(theta, X, y, _lambda)
+    print(f'Initial loss: {loss}')  # 打印初始代价
 
 
 # 这个函数是用来查看数据分布的样子的
@@ -79,4 +127,6 @@ def plot_data():
     plt.show()
 
 if __name__ == '__main__':
-    plot_data()
+    LogisticRegression()  # 调用逻辑回归函数
+    plot_data()  # 绘制数据分布图
+    print("Logistic Regression completed.")
