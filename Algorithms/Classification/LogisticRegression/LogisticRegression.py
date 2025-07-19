@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import optimize
 from matplotlib.font_manager import FontProperties
-from torch.distributions.constraints import positive
 
 font = FontProperties(fname = r'c:\windows\fonts\simsun.ttc', size = 14)
 
@@ -111,28 +110,28 @@ def lossFunction(theta, X, y, _lambda):
 
 
 def plot_decision_boundary(theta, X, y):
-    positive_data = np.where(y == 1)  # 找到y == 1的坐标
-    negative_data = np.where(y == 0)  # 找到y == 0的坐标
+    # 绘制数据点
+    pos = np.where(y == 1)
+    neg = np.where(y == 0)
+    plt.figure(figsize=(10, 10))
+    plt.plot(X[pos, 0], X[pos, 1], 'ro')
+    plt.plot(X[neg, 0], X[neg, 1], 'bo')
 
-    # 作图
-    plt.figure(figsize = (10, 10))
-    plt.plot(X[positive_data, 0], X[positive_data, 1], 'ro', label = 'Positive example')
-    plt.plot(X[negative_data, 0], X[negative_data, 1], 'bo', label = 'Negative example')
-    plt.title(u'散点图', fontproperties = font)
-
-    u = np.linspace(-1,1.5,50)  #根据具体的数据，这里需要调整
-    v = np.linspace(-1,1.5,50)
-
-    z = np.zeros((len(u),len(v)))
+    # 生成网格
+    u = np.linspace(X[:, 0].min() - 0.1, X[:, 0].max() + 0.1, 200)
+    v = np.linspace(X[:, 1].min() - 0.1, X[:, 1].max() + 0.1, 200)
+    z = np.zeros((len(u), len(v)))
     for i in range(len(u)):
         for j in range(len(v)):
-            z[i,j] = np.dot(mapFeature(u[i].reshape(1,-1),v[j].reshape(1,-1)),theta)    # 计算对应的值，需要map
+            mapped = mapFeature(np.array([u[i]]), np.array([v[j]]))
+            z[i, j] = np.dot(mapped, theta).item()
 
-    z = np.transpose(z)
-    plt.contour(u,v,z,[0,0.01],linewidth=2.0)   # 画等高线，范围在[0,0.01]，即近似为决策边界
-    #plt.legend()
+    z = z.T
+    plt.contour(u, v, z, levels=[0], linewidths=2.0, colors='g')
+    plt.title(u'决策边界', fontproperties=font)
+    plt.xlabel('X1')
+    plt.ylabel('X2')
     plt.show()
-
 
 
 def predict(X, theta):
