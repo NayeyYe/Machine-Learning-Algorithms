@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.font_manager import FontProperties
-from scipy import optimize
+# from scipy import optimize  # 不再需要
 
 font = FontProperties(fname=r'c:\windows\fonts\simsun.ttc', size=14)
 
@@ -140,6 +140,36 @@ def predict(X, theta):
     return p  # 返回预测结果
 
 
+def train(theta, X, y, _lambda, lr=0.1, num_iters=1000, tol=1e-6, verbose=False):
+    """
+    使用批量梯度下降法训练逻辑回归参数
+    :param theta: 初始参数 (n, 1)
+    :param X: 特征矩阵 (m, n)
+    :param y: 标签向量 (m, 1) 或 (m,)
+    :param _lambda: 正则化参数
+    :param lr: 学习率
+    :param num_iters: 最大迭代次数
+    :param tol: 收敛阈值
+    :param verbose: 是否打印loss
+    :return: 训练好的参数theta
+    """
+    theta = theta.copy()
+    y = y.reshape(-1, 1)
+    prev_loss = lossFunction(theta, X, y, _lambda)
+    for i in range(num_iters):
+        grad = gradient(theta, X, y, _lambda)
+        theta = theta - lr * grad
+        curr_loss = lossFunction(theta, X, y, _lambda)
+        if verbose and (i % 100 == 0 or i == num_iters - 1):
+            print(f"Iter {i}: loss = {curr_loss}")
+        if np.abs(prev_loss - curr_loss) < tol:
+            if verbose:
+                print(f"Converged at iter {i}")
+            break
+        prev_loss = curr_loss
+    return theta
+
+
 # 这是主函数入口
 def LogisticRegression():
     # 加载数据
@@ -168,17 +198,12 @@ def LogisticRegression():
     loss = lossFunction(theta, X, y, _lambda)
     print(f'Initial loss: {loss}')  # 打印初始代价
 
-    # 利用optimize库来优化loss函数
-    result = optimize.fmin_bfgs(lossFunction, theta, fprime=gradient, args=(X, y, _lambda))
-    '''
-    调用optimize.fmin_bfgs来优化loss函数
-    fmin_bfgs是BFGS算法的实现，用于求解无约束优化问题
-    lossFunction是我们要优化的函数
-    fprime是梯度函数，这里我们用gradient函数来计算梯度
-    args是传递给lossFunction的额外参数，这里我们传递X, y和_lambda
-    '''
+    # result = optimize.fmin_bfgs(lossFunction, theta, fprime=gradient, args=(X, y, _lambda))
+    result = train(theta, X, y, _lambda, lr=0.1, num_iters=2000, tol=1e-7, verbose=True)
     p = predict(X, result)  # 预测
-    print(f'在训练集上的准确度为 {np.mean(np.float64(p == y) * 100):.2f}%')  # 与真实值比较，p==y返回True，转化为float
+    # 修正准确率计算，确保p和y都是一维向量
+    acc = np.mean(p.reshape(-1) == y.reshape(-1)) * 100
+    print(f'在训练集上的准确度为 {acc:.2f}%')
 
     X = X[:, 1:]  # 去掉第一列的1
     y = y.reshape(-1, 1)  # 将y转换为列向量
