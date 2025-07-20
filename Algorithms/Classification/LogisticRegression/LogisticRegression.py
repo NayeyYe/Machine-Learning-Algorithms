@@ -153,19 +153,26 @@ def train(theta, X, y, _lambda, lr=0.1, num_iters=1000, tol=1e-6, verbose=False)
     :param verbose: 是否打印loss
     :return: 训练好的参数theta
     """
+
     theta = theta.copy()
     y = y.reshape(-1, 1)
     prev_loss = lossFunction(theta, X, y, _lambda)
     for i in range(num_iters):
+        # 计算梯度
         grad = gradient(theta, X, y, _lambda)
+        # 更新参数
         theta = theta - lr * grad
+        # 计算当前的loss
         curr_loss = lossFunction(theta, X, y, _lambda)
+        # 打印当前的loss
         if verbose and (i % 100 == 0 or i == num_iters - 1):
             print(f"Iter {i}: loss = {curr_loss}")
+        # 检查收敛条件
         if np.abs(prev_loss - curr_loss) < tol:
             if verbose:
                 print(f"Converged at iter {i}")
             break
+        # 更新前一个loss
         prev_loss = curr_loss
     return theta
 
