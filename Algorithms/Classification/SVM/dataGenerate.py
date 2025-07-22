@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def generate_svm_data(n_samples=1000, random_state=42, inner_radius=1.0, outer_radius=1.6, noise_scale=0.18, cross_ratio=0.20):
+def generate_svm_data(n_samples=500, random_state=42, inner_radius=1.0, outer_radius=1.6, noise_scale=0.18, cross_ratio=0.20):
     """
     生成用于SVM高斯核训练的同心环形数据集（不划分训练测试集）
     数据分布无法被线性超平面分割，边界更soft，交叉更多，适合核方法
