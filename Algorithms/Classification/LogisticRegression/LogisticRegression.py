@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.font_manager import FontProperties
-# from scipy import optimize  # 不再需要
-
 font = FontProperties(fname=r'c:\windows\fonts\simsun.ttc', size=14)
 
 
