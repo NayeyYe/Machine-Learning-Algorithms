@@ -3,3 +3,6 @@
 
 # Ignore data.txt
 .Algorithms/Classification/LogisticRegression/data.txt
+
+# Ignore SVM data
+.Algorithms/Classification/SVM/svm_data_*.txt
