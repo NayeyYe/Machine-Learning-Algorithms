@@ -181,6 +181,7 @@ def train(theta, X, y, _lambda, lr=0.1, num_iters=1000, tol=1e-6, verbose=False)
 def LogisticRegression():
     # 加载数据
     X, y = load_data()
+    plot_data(X, y)
 
     # 开始处理数据
     # 这里的数据处理是，将X = (X1, X2)这个二维数据变成多项式(1, X1, X2, X1^2, X1X2, X2^2)
@@ -218,8 +219,12 @@ def LogisticRegression():
 
 
 # 这个函数是用来查看数据分布的样子的
-def plot_data():
-    X, y = load_data()
+def plot_data(X, y):
+    """
+    绘制数据分布图
+    :param X: 特征矩阵 (m, 2)
+    :param y: 标签向量 (m, 1) 或 (m,)
+    """
     # 找到y == 1和y == 0的坐标
     positive_data = np.where(y == 1)
     negative_data = np.where(y == 0)
