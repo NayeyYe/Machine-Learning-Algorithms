@@ -1,3 +1,9 @@
+# 关于数学公式无法渲染！！！！
+
+因为github作为一个前端，使用的是MathJax渲染数学公式，但是markdown使用的是Latex渲染，有一些公式无法正常显示
+如果想看公式，可以clone下来之后用typora或者vscode查看。
+
+
 # Machine-Learning-Algorithms
 
 这是一个学习机器学习**算法**和机器学习**实战**的repository
@@ -18,7 +24,7 @@
 
 ##### 问题
 
-一组特征变量$\mathbf{x} = (x_1, x_2, \dots, x_m) \in \mathbb{R}^{n \times m}$，一组标签$\mathbb{y} = (y_1, y_2, \dots, y_m), y_i \in \{-1, +1 \}$
+一组特征变量$\mathbb{x} = (x_1, x_2, \dots, x_m) \in \mathbb{R}^{n \times m}$，一组标签$\mathbb{y} = (y_1, y_2, \dots, y_m), y_i \in \{-1, +1 \}$
 
 目标是估计条件概率$P(Y = 1 | X)$，即给定特征$X = x$的情况下，$y = 1$的概率。
 
@@ -257,7 +263,7 @@ $$
 \max_\alpha \,\,\, & \sum_{i=1}^m \alpha_i - \frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m \alpha_i \alpha_j y_i y_j x_i^T x_j \\
 \text{s.t.} \,\,\,& \sum_{i=1}^m \alpha_iy_i = 0, \\
 & 0 \leq \alpha_i \leq C, i = 1, 2, \dots, m
-\end{align}
+\end{align}
 $$
 同样要满足**KKT条件**
 $$
