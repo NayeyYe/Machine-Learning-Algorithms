@@ -1,8 +1,11 @@
+# IDE文件
 .idea/
-.gitignore
+.vscode/
+.ipynb
+.ipynb_checkpoints/
 
-# Ignore data.txt
-.Algorithms/Classification/LogisticRegression/data.txt
+# 数据文件
+data/
 
-# Ignore SVM data
-.Algorithms/Classification/SVM/svm_data_*.txt
+# 资源文件
+assets/
