@@ -3,7 +3,6 @@
 因为github作为一个前端，使用的是MathJax渲染数学公式，但是markdown使用的是Latex渲染，有一些公式无法正常显示
 如果想看公式，可以clone下来之后用typora或者vscode查看。
 
-
 # Machine-Learning-Algorithms
 
 这是一个学习机器学习**算法**和机器学习**实战**的repository
@@ -16,19 +15,19 @@
 | 降维算法 | 主成分分析，线性判别分析等                         |
 | 进阶算法 | GBDT提升算法，lightgbm，，EM算法，隐马尔科夫模型   |
 
-## 算法
+# 算法
 
-### 分类
+## 分类
 
-#### LogisticRegression
+### LogisticRegression
 
-##### 问题
+#### 问题
 
 一组特征变量$\mathbb{x} = (x_1, x_2, \dots, x_m) \in \mathbb{R}^{n \times m}$，一组标签$\mathbb{y} = (y_1, y_2, \dots, y_m), y_i \in \{-1, +1 \}$
 
 目标是估计条件概率$P(Y = 1 | X)$，即给定特征$X = x$的情况下，$y = 1$的概率。
 
-##### 问题分析
+#### 问题分析
 
 如何用LogisticRegression做一个分类算法
 
@@ -100,9 +99,9 @@ $$
 \beta_j := \beta_j + \alpha\frac{\partial l}{\partial \beta_j}
 $$
 
-#### SVM
+### SVM
 
-##### 问题分析
+#### 问题分析
 
 只考虑**二分类**问题， 假设有$n$个训练点${x_i \in \mathbb{R}^N}, i = 1, 2 ,\dots, n$，每一个训练点有一个指标$y_i \in \{-1, +1\}$
 
@@ -120,16 +119,19 @@ $$
 * LogisticRegression目的是输出概率值，概率的阈值定为0.5，大于0.5预测为1，小于0.5预测为0。原数据的数据部分和标签部分对回归的影响非常大！一个标签的错误，可能会让这个回归结果偏移，导致预测错误。
 * SVM并不是想预测概率，单纯是想将两种数据分开，通过各种手段将数据分开，是软间隔分开还是硬间隔分开并不重要，重要的只有所有的向量支撑起来的**超平面**。
 
-![SVM类型](./assets/SVM_1.png)
+![SVM类型](https://nyeweb.fun/img/20250927201321171.png)
 
 ##### 硬间隔
 
-![SVM_2](./assets/SVM_2.png)
+![SVM_2](https://nyeweb.fun/img/20250927201340585.png)
 
 1. 假设划分超平面的线性方程
 
 $$
-w^T x + b = 0 \\
+w^T x + b = 0
+$$
+
+$$
 w = (w_1, w_2, \dots, w_n)
 $$
 
@@ -137,22 +139,33 @@ $$
 
 样本到超平面$w^Tx+b=0$的距离为$\gamma = \displaystyle\frac{|w^Tx+b|}{||w||}$， 当分类为硬间隔时
 $$
-w^T x_i + b \geq +1, y_i = +1 \\
-w^T x_i + b \leq -1, y_i = -1
+w^T x_i + b \geq +1, \quad y_i = +1
 $$
+$$
+w^T x_i + b \leq -1, \quad y_i = -1
+$$
+
+
+
 所以所有的样本中，找到**离超平面最近的样本点**，这几个样本点会让上面的不等式的等号**成立**，被称为**支持向量**，这些在超平面**两端**的样本点，到超平面的距离之和为
 $$
 \gamma = \frac{2}{||w||}
 $$
 想要找到**最大间隔**划分的超平面，就是要赵大鹏可以满足上式的参数$w$和$b$，即
 $$
-\max_{w,b} \frac{2}{||w||} \\
-s.t.\,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\begin{align}
+\max_{w,b} &  \quad \frac{2}{||w||} \\
+\\
+s.t. & \quad \,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\end{align}
 $$
 显然这个问题可以转化成一个最小化问题
 $$
-\min_{w,b} \frac{1}{2}||w||^2 \\
-s.t. \,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\begin{align}
+\min_{w,b} & \quad \frac{1}{2}||w||^2 \\
+\\
+s.t. & \quad \,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\end{align}
 $$
 这就是SVM的基本形式
 
@@ -160,8 +173,11 @@ $$
 
 关于这个最小化问题 
 $$
-\min_{w,b} \frac{1}{2}||w||^2 \\
-s.t. \,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\begin{align}
+\min_{w,b} & \quad \frac{1}{2}||w||^2 \\
+\\
+s.t. & \quad \,\, y_i(w^Tx_i+b) \geq 1, i = 1, 2, \dots, m
+\end{align}
 $$
 我们可以得到**Lagrange函数**
 $$
@@ -190,7 +206,9 @@ $$
 $$
 \begin{cases}
 \alpha \geq 0 \\
+\\
 y_if(x_i) -1 \geq 0 \\
+\\
 \alpha_i(y_i f(x_i) - 1) = 0
 \end{cases}
 $$
@@ -200,9 +218,9 @@ $$
 在对偶问题中
 $$
 \begin{align}
-\max_\alpha &  \,\, \sum_{i=1}^m \alpha_i - \frac{1}{2}\sum_{i=1}^m \sum_{j=1}^m \alpha_i \alpha_j y_i y_j x_i^T x_j \\
-s.t.& \,\,\, \sum_{i=1}^{m}\alpha_i y_j = 0, \\
-& \,\, \alpha_i \geq 0, i = 1, 2, \dots, m
+\max_\alpha & \quad  \,\, \sum_{i=1}^m \alpha_i - \frac{1}{2}\sum_{i=1}^m \sum_{j=1}^m \alpha_i \alpha_j y_i y_j x_i^T x_j \\
+s.t.& \quad \,\,\, \sum_{i=1}^{m}\alpha_i y_j = 0, \\
+& \quad \,\, \alpha_i \geq 0, i = 1, 2, \dots, m
 \end{align}
 $$
 这里出现了内积$<x_i, x_j>$，我们将$x$映射到$\phi(x)$上，得到特征空间$\Phi$上的超平面，模型表示为
@@ -213,7 +231,7 @@ $$
 
 常用的核函数
 
-![SVM_3](./assets/SVM_3.png)
+![SVM_3](https://nyeweb.fun/img/20250927201409820.png)
 
 ##### 软间隔
 
@@ -223,7 +241,7 @@ y_i(w^Tx_i+b) \leq 1
 $$
 
 
-![SVM_4](./assets/SVM_4.png)
+![SVM_4](https://nyeweb.fun/img/20250927201420848.png)
 
   引入**惩罚项**$C$，优化目标改写为
 $$
@@ -240,9 +258,11 @@ $$
 引入**松弛变量**$\xi_i = \max(0, 1 - y_i (w^T x_i +b))\geq 0$， 问题变成
 $$
 \begin{align}
-\max_{w,b,\xi_i}  \,\,\, &\frac{1}{2}||w||^2 + C\sum_{i=1}^{m}\xi_i \\
-\text{s.t.}  \,\,\, & y_i (w^T x_i +b) \geq 1 - \xi_i \\
-& \xi_i \geq 0, i = 1, 2, \dots , m
+\max_{w,b,\xi_i} & \quad \frac{1}{2}||w||^2 + C\sum_{i=1}^{m}\xi_i \\
+\\
+s.t. & \quad y_i (w^T x_i +b) \geq 1 - \xi_i \\
+\\
+& \quad \xi_i \geq 0, i = 1, 2, \dots , m
 \end{align}
 $$
 然后构造**Lagrange函数**
@@ -269,41 +289,43 @@ $$
 $$
 \begin{cases}
 \alpha_i \geq 0, \mu_i \geq 0 \\
+\\
 y_i f(x_i) - 1 + \xi_i \geq 0 \\
+\\
 \alpha_i(y_i f(x_i) - 1 + \xi_i) = 0\\
+\\
 \xi_i \geq 0, \mu_i\xi_i =0
 \end{cases}
 $$
 
 
 
+### DecisionTree
 
-#### DecisionTree
+### 贝叶斯分类器
 
-#### 贝叶斯分类器
+### 集成学习Boosting
 
-#### 集成学习Boosting
+## 回归
 
-### 回归
+### 线性回归LinearRegression
 
-#### 线性回归LinearRegression
+### 决策树DecisionTree
 
-#### 决策树DecisionTree
+## 聚类
 
-### 聚类
+### K-Means
 
-#### K-Means
+### DBscan
 
-#### DBscan
+## 降维
 
-### 降维
+### PCA
 
-#### PCA
+### LDA
 
-#### LDA
+### 集成学习Boosting
 
-#### 集成学习Boosting
+## 其他
 
-### 其他
-
-## 实战
+# 实战
