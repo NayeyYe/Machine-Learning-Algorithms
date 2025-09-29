@@ -6,6 +6,7 @@
 
 # 数据文件
 data/
+outputs/
 
 # 资源文件
 assets/
